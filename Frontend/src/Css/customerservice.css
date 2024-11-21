@@ -1,0 +1,99 @@
+/* Shared styles for Customer Service, Open Ticket, and Ticket Status components */
+
+/* Container styling */
+#customerservice,
+#openticket,
+#ticketstatus {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 20px;
+  padding: 20px;
+  background-color: #f5f7fa;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Button styling */
+#customerservice button,
+#openticket button,
+#ticketstatus button {
+  font-size: 1rem;
+  padding: 12px 20px;
+  margin: 10px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+#customerservice button:hover,
+#openticket button:hover,
+#ticketstatus button:hover {
+  background-color: #0056b3;
+  transform: scale(1.05);
+}
+
+/* Form styling */
+#customerservice form,
+#openticket form,
+#ticketstatus form {
+  display: flex;
+  flex-direction: column;
+  width: 300px;
+  margin-top: 20px;
+}
+
+/* Textarea styling */
+#customerservice textarea,
+#openticket textarea {
+  width: 100%;
+  height: 100px;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: none;
+  font-size: 1rem;
+}
+
+/* File input styling */
+#customerservice input[type="file"],
+#openticket input[type="file"] {
+  margin: 10px 0;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* Submit button specific styling */
+#customerservice button[type="submit"],
+#openticket button[type="submit"] {
+  background-color: #28a745;
+}
+
+#customerservice button[type="submit"]:hover,
+#openticket button[type="submit"]:hover {
+  background-color: #218838;
+}
+
+/* Input styling for TicketStatus */
+#ticketstatus input {
+  padding: 10px;
+  margin: 10px 0;
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+/* Text display for ticket number and decision */
+#openticket p,
+#ticketstatus p {
+  margin-top: 10px;
+  font-weight: bold;
+  color: #333;
+}

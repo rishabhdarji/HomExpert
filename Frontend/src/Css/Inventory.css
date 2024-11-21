@@ -1,0 +1,125 @@
+/* Inventory.css */
+
+.inventory-container {
+  padding: 30px;
+  max-width: 1200px;
+  margin: 0 auto;
+  background-color: #f0f4fb;
+  border-radius: 15px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  animation: fadeIn 1s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.title {
+  font-size: 2.5rem;
+  text-align: center;
+  margin-bottom: 25px;
+  color: #343a40;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+}
+
+h2 {
+  font-size: 1.8rem;
+  margin-bottom: 20px;
+  color: #495057;
+  border-bottom: 2px solid #6a82fb;
+  padding-bottom: 10px;
+}
+
+.styled-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  font-size: 1.1rem;
+  font-family: 'Poppins', sans-serif;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.styled-table thead tr {
+  background: linear-gradient(to right, #6a82fb, #fc5c7d);
+  color: #ffffff;
+  text-align: left;
+  font-weight: bold;
+}
+
+.styled-table th,
+.styled-table td {
+  padding: 15px 20px;
+  border-bottom: 1px solid #ddd;
+}
+
+.styled-table tbody tr {
+  background-color: #ffffff;
+  transition: background-color 0.3s ease;
+}
+
+.styled-table tbody tr:nth-of-type(even) {
+  background-color: #f4f7fc;
+}
+
+.styled-table tbody tr:hover {
+  background-color: #e9f1f7;
+  transform: translateY(-2px);
+  transition: all 0.2s ease-in-out;
+}
+
+.styled-table tbody tr.active-row {
+  font-weight: bold;
+  color: #007bff;
+}
+
+section {
+  margin-bottom: 50px;
+}
+
+table {
+  width: 100%;
+}
+
+.ResponsiveContainer {
+  margin-top: 30px;
+}
+
+button {
+  background-color: #6a82fb;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-family: 'Poppins', sans-serif;
+}
+
+button:hover {
+  background-color: #4b63d9;
+}
+
+@media (max-width: 768px) {
+  .inventory-container {
+    padding: 20px;
+  }
+
+  h2 {
+    font-size: 1.4rem;
+  }
+
+  .styled-table th,
+  .styled-table td {
+    padding: 12px 15px;
+  }
+}

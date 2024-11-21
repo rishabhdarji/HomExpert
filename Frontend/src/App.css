@@ -1,0 +1,43 @@
+.home-container {
+  height: 100vh; /* Full viewport height */
+  background-image: url('/public/images/smarthomes.jpg'); /* Background image */
+  background-size: cover; /* Ensure the image covers the entire container */
+  background-position: center; /* Center the image */
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5); /* Dark overlay to improve text readability */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.home-content {
+  z-index: 1; /* Ensure text is above the background */
+  text-align: center;
+}
+
+.home-title {
+  font-size: 3rem;
+  font-weight: bold;
+}
+
+.home-subtitle {
+  font-size: 1.5rem;
+  margin-top: 20px;
+}
+
+.btn-lg {
+  padding: 15px 30px;
+  font-size: 1.25rem;
+}

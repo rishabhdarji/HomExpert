@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<catalog>
+  <product>
+    <id>1</id>
+    <name>Doorbell X Pro</name>
+    <price>129.99</price>
+    <description>An advanced smart doorbell with facial recognition.</description>
+    <category>advanced smart doorbells</category>
+    <accessories>Chime, Extra Battery</accessories>
+    <image>doorbell_x_pro.jpg</image>
+    <discount>10.00</discount>
+    <rebate>5.00</rebate>
+    <warranty>1</warranty>
+    <stock>43</stock>
+  </product>
+  <product>
+    <id>2</id>
+    <name>Ultra Secure Doorbell</name>
+    <price>99.99</price>
+    <description>A wireless doorbell with advanced security features.</description>
+    <category>advanced smart doorbells</category>
+    <accessories>Solar Panel, Extra Camera</accessories>
+    <image>ultra_secure_doorbell.jpg</image>
+    <discount>7.00</discount>
+    <rebate>3.00</rebate>
+    <warranty>1</warranty>
+    <stock>7</stock>
+  </product>
+  <product>
+    <id>3</id>
+    <name>Doorbell Vision Pro</name>
+    <price>149.99</price>
+    <description>High-definition video with 180-degree view.</description>
+    <category>advanced smart doorbells</category>
+    <accessories>Night Vision Lens, Extra Battery</accessories>
+    <image>doorbell_vision_pro.jpg</image>
+    <discount>12.00</discount>
+    <rebate>6.00</rebate>
+    <warranty>1</warranty>
+    <stock>4</stock>
+  </product>
+  <product>
+    <id>4</id>
+    <name>Pro Doorbell Max</name>
+    <price>199.99</price>
+    <description>Premium smart doorbell with AI-based motion detection.</description>
+    <category>advanced smart doorbells</category>
+    <accessories>Mounting Bracket, Spare Battery</accessories>
+    <image>pro_doorbell_max.jpg</image>
+    <discount>15.00</discount>
+    <rebate>7.00</rebate>
+    <warranty>1</warranty>
+    <stock>96</stock>
+  </product>
+  <product>
+    <id>5</id>
+    <name>Smart Eye Doorbell</name>
+    <price>139.99</price>
+    <description>A doorbell with two-way audio and enhanced privacy.</description>
+    <category>advanced smart doorbells</category>
+    <accessories>Weather Shield, Backup Power</accessories>
+    <image>smart_eye_doorbell.jpg</image>
+    <discount>10.00</discount>
+    <rebate>4.00</rebate>
+    <warranty>1</warranty>
+    <stock>69</stock>
+  </product>
+  <product>
+    <id>6</id>
+    <name>Secure Lock Pro</name>
+    <price>179.99</price>
+    <description>Smart doorlock with fingerprint and code access.</description>
+    <category>smart doorlock</category>
+    <accessories>Backup Key, Keypad</accessories>
+    <image>secure_lock_pro.jpg</image>
+    <discount>10.00</discount>
+    <rebate>5.00</rebate>
+    <warranty>1</warranty>
+    <stock>55</stock>
+  </product>
+  <product>
+    <id>7</id>
+    <name>AutoLock Secure</name>
+    <price>159.99</price>
+    <description>Automatic locking system with smartphone control.</description>
+    <category>smart doorlock</category>
+    <accessories>Bluetooth Key, Spare Key</accessories>
+    <image>autolock_secure.jpg</image>
+    <discount>8.00</discount>
+    <rebate>4.00</rebate>
+    <warranty>1</warranty>
+    <stock>64</stock>
+  </product>
+  <product>
+    <id>8</id>
+    <name>LockMate Ultra</name>
+    <price>199.99</price>
+    <description>High-security lock with voice control.</description>
+    <category>smart doorlock</category>
+    <accessories>Voice Module, Backup Key</accessories>
+    <image>lockmate_ultra.jpg</image>
+    <discount>15.00</discount>
+    <rebate>6.00</rebate>
+    <warranty>1</warranty>
+    <stock>68</stock>
+  </product>
+  <product>
+    <id>9</id>
+    <name>SmartLock Shield</name>
+    <price>189.99</price>
+    <description>Secure doorlock with tamper alarm and alerts.</description>
+    <category>smart doorlock</category>
+    <accessories>Alarm Module, Extra Key</accessories>
+    <image>smartlock_shield.jpg</image>
+    <discount>12.00</discount>
+    <rebate>5.00</rebate>
+    <warranty>1</warranty>
+    <stock>39</stock>
+  </product>
+  <product>
+    <id>10</id>
+    <name>QuickSecure Lock</name>
+    <price>129.99</price>
+    <description>Easy-to-install doorlock with remote control.</description>
+    <category>smart doorlock</category>
+    <accessories>Keychain Remote, Extra Key</accessories>
+    <image>quicksecure_lock.jpg</image>
+    <discount>7.00</discount>
+    <rebate>3.00</rebate>
+    <warranty>1</warranty>
+    <stock>93</stock>
+  </product>
+  <product>
+    <id>11</id>
+    <name>Smart LED Bulb</name>
+    <price>19.99</price>
+    <description>Wi-Fi enabled LED bulb with adjustable color.</description>
+    <category>smart lighting</category>
+    <accessories>Remote Control</accessories>
+    <image>smart_led_bulb.jpg</image>
+    <discount>2.00</discount>
+    <rebate>1.00</rebate>
+    <warranty>1</warranty>
+    <stock>48</stock>
+  </product>
+  <product>
+    <id>12</id>
+    <name>Smart Lighting Strip</name>
+    <price>49.99</price>
+    <description>Customizable smart LED strip for ambient lighting.</description>
+    <category>smart lighting</category>
+    <accessories>Connector Cables</accessories>
+    <image>smart_lighting_strip.jpg</image>
+    <discount>5.00</discount>
+    <rebate>2.00</rebate>
+    <warranty>1</warranty>
+    <stock>59</stock>
+  </product>
+  <product>
+    <id>13</id>
+    <name>Smart Lamp Pro</name>
+    <price>59.99</price>
+    <description>Voice-controlled smart desk lamp.</description>
+    <category>smart lighting</category>
+    <accessories>Touch Control, Backup Battery</accessories>
+    <image>smart_lamp_pro.jpg</image>
+    <discount>6.00</discount>
+    <rebate>3.00</rebate>
+    <warranty>1</warranty>
+    <stock>53</stock>
+  </product>
+  <product>
+    <id>14</id>
+    <name>Outdoor Smart Lights</name>
+    <price>79.99</price>
+    <description>Weatherproof outdoor lighting system.</description>
+    <category>smart lighting</category>
+    <accessories>Solar Panel, Extension Cord</accessories>
+    <image>outdoor_smart_lights.jpg</image>
+    <discount>8.00</discount>
+    <rebate>4.00</rebate>
+    <warranty>1</warranty>
+    <stock>85</stock>
+  </product>
+  <product>
+    <id>15</id>
+    <name>Smart Ceiling Light</name>
+    <price>89.99</price>
+    <description>Smart ceiling light with motion detection.</description>
+    <category>smart lighting</category>
+    <accessories>Motion Sensor, Remote</accessories>
+    <image>smart_ceiling_light.jpg</image>
+    <discount>10.00</discount>
+    <rebate>5.00</rebate>
+    <warranty>1</warranty>
+    <stock>66</stock>
+  </product>
+  <product>
+    <id>16</id>
+    <name>Voice Speaker Pro</name>
+    <price>99.99</price>
+    <description>Voice-activated smart speaker with premium sound.</description>
+    <category>smart speaker</category>
+    <accessories>Wall Mount</accessories>
+    <image>voice_speaker_pro.jpg</image>
+    <discount>7.00</discount>
+    <rebate>3.00</rebate>
+    <warranty>1</warranty>
+    <stock>76</stock>
+  </product>
+  <product>
+    <id>17</id>
+    <name>SoundWave Speaker</name>
+    <price>119.99</price>
+    <description>High-fidelity speaker with multi-room support.</description>
+    <category>smart speaker</category>
+    <accessories>Power Cable</accessories>
+    <image>soundwave_speaker.jpg</image>
+    <discount>10.00</discount>
+    <rebate>5.00</rebate>
+    <warranty>1</warranty>
+    <stock>80</stock>
+  </product>
+  <product>
+    <id>18</id>
+    <name>EchoMax Speaker</name>
+    <price>139.99</price>
+    <description>Smart speaker with integrated smart home control.</description>
+    <category>smart speaker</category>
+    <accessories>Backup Battery</accessories>
+    <image>echomax_speaker.jpg</image>
+    <discount>12.00</discount>
+    <rebate>6.00</rebate>
+    <warranty>1</warranty>
+    <stock>73</stock>
+  </product>
+  <product>
+    <id>19</id>
+    <name>SmartSound Speaker</name>
+    <price>129.99</price>
+    <description>Compact smart speaker with excellent bass.</description>
+    <category>smart speaker</category>
+    <accessories>USB-C Charger</accessories>
+    <image>smartsound_speaker.jpg</image>
+    <discount>8.00</discount>
+    <rebate>4.00</rebate>
+    <warranty>1</warranty>
+    <stock>22</stock>
+  </product>
+  <product>
+    <id>20</id>
+    <name>MusicPod Speaker</name>
+    <price>109.99</price>
+    <description>Portable smart speaker with 360-degree sound.</description>
+    <category>smart speaker</category>
+    <accessories>Carrying Case</accessories>
+    <image>musicpod_speaker.jpg</image>
+    <discount>5.00</discount>
+    <rebate>2.00</rebate>
+    <warranty>1</warranty>
+    <stock>93</stock>
+  </product>
+  <product>
+    <id>21</id>
+    <name>Video Doorbell Pro Plus</name>
+    <price>249.99</price>
+    <description>Video doorbell with ultra HD recording.</description>
+    <category>video doorbell pro</category>
+    <accessories>Extra Battery</accessories>
+    <image>video_doorbell_pro_plus.jpg</image>
+    <discount>20.00</discount>
+    <rebate>10.00</rebate>
+    <warranty>1</warranty>
+    <stock>96</stock>
+  </product>
+  <product>
+    <id>22</id>
+    <name>Doorbell Vision HD</name>
+    <price>229.99</price>
+    <description>High-definition video with night vision mode.</description>
+    <category>video doorbell pro</category>
+    <accessories>Backup Battery</accessories>
+    <image>doorbell_vision_hd.jpg</image>
+    <discount>18.00</discount>
+    <rebate>9.00</rebate>
+    <warranty>1</warranty>
+    <stock>100</stock>
+  </product>
+  <product>
+    <id>23</id>
+    <name>Pro Doorbell X</name>
+    <price>259.99</price>
+    <description>Smart doorbell with advanced motion detection.</description>
+    <category>video doorbell pro</category>
+    <accessories>Extra Camera, Mounting Kit</accessories>
+    <image>pro_doorbell_x.jpg</image>
+    <discount>22.00</discount>
+    <rebate>11.00</rebate>
+    <warranty>1</warranty>
+    <stock>14</stock>
+  </product>
+  <product>
+    <id>24</id>
+    <name>Smart Video Doorbell Max</name>
+    <price>279.99</price>
+    <description>Premium video doorbell with wide-angle lens.</description>
+    <category>video doorbell pro</category>
+    <accessories>Spare Battery</accessories>
+    <image>smart_video_doorbell_max.jpg</image>
+    <discount>25.00</discount>
+    <rebate>12.00</rebate>
+    <warranty>1</warranty>
+    <stock>67</stock>
+  </product>
+  <product>
+    <id>25</id>
+    <name>Doorbell Secure Vision</name>
+    <price>239.99</price>
+    <description>Secure doorbell with facial recognition technology.</description>
+    <category>video doorbell pro</category>
+    <accessories>Solar Panel</accessories>
+    <image>doorbell_secure_vision.jpg</image>
+    <discount>19.00</discount>
+    <rebate>8.00</rebate>
+    <warranty>1</warranty>
+    <stock>95</stock>
+  </product>
+</catalog>

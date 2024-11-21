@@ -1,0 +1,135 @@
+/* Checkout.css */
+
+.container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    text-align: center;
+    font-family: 'Poppins', sans-serif;
+    color: #333;
+    margin-bottom: 40px;
+}
+
+.card {
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.card h5 {
+    font-size: 1.2rem;
+    color: #555;
+}
+
+.card p {
+    color: #666;
+    margin-bottom: 10px;
+}
+
+.table {
+    margin-top: 20px;
+}
+
+.table th, .table td {
+    padding: 15px;
+    text-align: left;
+    border-top: none;
+}
+
+.table th {
+    background-color: #f2f2f2;
+    color: #333;
+}
+
+.table td {
+    background-color: #ffffff;
+}
+
+.form-label {
+    font-size: 1rem;
+    color: #333;
+}
+
+.form-control {
+    padding: 12px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    background-color: #f7f7f7;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+    margin-bottom: 15px;
+}
+
+.form-control:focus {
+    border-color: #007bff;
+}
+
+.radio-label {
+    margin-left: 10px;
+}
+
+.btn {
+    width: 100%;
+    padding: 15px;
+    background-color: #007bff;
+    color: white;
+    font-size: 1.1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 20px;
+}
+
+.btn:hover {
+    background-color: #0056b3;
+}
+
+.mt-4 {
+    margin-top: 40px;
+}
+
+.mb-4 {
+    margin-bottom: 40px;
+}
+
+.mb-3 {
+    margin-bottom: 20px;
+}
+
+.text-center {
+    text-align: center;
+}
+
+/* Radio buttons and labels */
+input[type="radio"] {
+    margin-right: 5px;
+}
+
+.radio-label {
+    font-size: 1rem;
+    color: #333;
+}
+
+/* Media queries for mobile responsiveness */
+@media (max-width: 768px) {
+    .card {
+        padding: 15px;
+    }
+
+    .form-control {
+        margin-bottom: 10px;
+    }
+
+    .btn {
+        padding: 12px;
+    }
+}

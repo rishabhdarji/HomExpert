@@ -1,0 +1,121 @@
+/* Main container for the product description */
+.product-description-container {
+    max-width: 1000px;
+    margin: 50px auto; /* Margin from all sides */
+    padding: 20px;
+}
+
+/* Styling for the product description box */
+.product-description {
+    font-family: 'Arial', sans-serif;
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+/* Specific styles for the product box */
+.product-box {
+    margin-bottom: 30px;
+}
+
+/* Header for the product title */
+.product-box h1 {
+    font-size: 26px;
+    margin-bottom: 10px;
+}
+
+/* Product details like price and warranty */
+.product-box p {
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+/* Quantity control styles */
+.quantity-control {
+    display: flex;
+    align-items: center;
+    margin: 20px 0;
+}
+
+/* Quantity adjustment buttons */
+.quantity-control button {
+    width: 35px;
+    height: 35px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    margin: 0 10px;
+}
+
+.quantity-control span {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+/* Accessory section styling */
+.accessory-section {
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 2px solid #eee;
+}
+
+/* Header for accessory section */
+.accessory-section h2 {
+    font-size: 22px;
+    margin-bottom: 20px;
+}
+
+/* Accessory box - small size */
+.accessory-box {
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 10px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    max-width: 300px; /* Keep the accessory box small */
+    margin-bottom: 20px;
+}
+
+/* Accessory name styling */
+.accessory-box h3 {
+    font-size: 18px;
+    margin-bottom: 8px;
+}
+
+/* Accessory description and price */
+.accessory-box p {
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+
+.accessory-box strong {
+    font-size: 16px;
+}
+
+/* Action buttons styling */
+.action-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+/* Button hover effect */
+button:hover {
+    background-color: #0056b3;
+}

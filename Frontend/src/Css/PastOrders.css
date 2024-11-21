@@ -1,0 +1,87 @@
+/* PastOrders.css */
+
+.container {
+    padding: 20px;
+    max-width: 1200px;
+    margin: auto;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  h2 {
+    color: #333;
+    font-weight: 600;
+  }
+  
+  .no-orders {
+    font-size: 1.2rem;
+    color: #666;
+  }
+  
+  .table {
+    margin-top: 20px;
+    border: 1px solid #e5e5e5;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  
+  .thead-dark {
+    background-color: #333;
+    color: #fff;
+  }
+  
+  .table-hover tbody tr:hover {
+    background-color: #f1f1f1;
+  }
+  
+  .table-danger {
+    background-color: #f8d7da !important;
+    color: #721c24;
+  }
+  
+  .status-badge {
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    text-transform: capitalize;
+  }
+  
+  .status-badge.pending {
+    background-color: #ffaf00;
+    color: white;
+  }
+  
+  .status-badge.delivered {
+    background-color: #28a745;
+    color: white;
+  }
+  
+  .status-badge.cancelled {
+    background-color: #dc3545;
+    color: white;
+  }
+  
+  .btn {
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+  
+  .btn:hover {
+    transform: translateY(-2px);
+  }
+  
+  @media (max-width: 768px) {
+    .container {
+      padding: 10px;
+    }
+  
+    .table {
+      font-size: 0.9rem;
+    }
+  
+    .btn {
+      padding: 8px 16px;
+      font-size: 0.8rem;
+    }
+  }
+  
