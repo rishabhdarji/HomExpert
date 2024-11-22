@@ -10,18 +10,24 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@elastic/elasticsearch": "^8.16.1",
+    "@mojs/core": "^1.7.1",
     "axios": "^1.7.7",
     "bcrypt": "^5.1.1",
+    "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.3",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
     "imgur": "^2.4.2",
-    "mongoose": "^8.7.0",
+    "mongoose": "^8.8.2",
     "multer": "^1.4.5-lts.1",
-    "mysql2": "^3.11.3",
+    "mysql2": "^3.11.4",
     "openai": "^4.69.0",
+    "react-scripts": "^5.0.1",
+    "undici": "^6.21.0",
     "uuid": "^11.0.2",
+    "web-streams-polyfill": "^4.0.0",
     "xml2js": "^0.6.2"
   }
 }
