@@ -12,7 +12,7 @@ const elasticUri = 'http://localhost:9200';
 const elasticClient = new ElasticClient({ node: elasticUri });
 
 // OpenAI API Key
-const openAiKey = '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';
+const openAiKey = 'api-key-here'; // Replace with your OpenAI API key
 
 // Product data
 const productData = [

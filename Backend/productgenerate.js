@@ -54,7 +54,7 @@ const generateProductDescriptions = async () => {
                     temperature: 0.7,
                 },
                 {
-                    headers: { Authorization: `Bearer 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` },
+                    headers: { Authorization: `Bearer api-key here` },
                 }
             );
 
