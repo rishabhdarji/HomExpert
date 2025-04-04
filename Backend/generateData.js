@@ -1,7 +1,7 @@
 const axios = require("axios");
 
 // API Keys and URLs
-const openAiApiKey = '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';
+const openAiApiKey = 'API key here';
 const productApiUrl = "http://localhost:3001/products";
 const reviewApiUrl = "http://localhost:3001/reviews";
 
