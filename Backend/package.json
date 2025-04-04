@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "description": "",
+  "type": "module",
   "dependencies": {
     "@elastic/elasticsearch": "^8.16.1",
     "@mojs/core": "^1.7.1",
@@ -29,5 +30,11 @@
     "uuid": "^11.0.2",
     "web-streams-polyfill": "^4.0.0",
     "xml2js": "^0.6.2"
+  },
+  "devDependencies": {
+    "@babel/preset-env": "^7.26.0",
+    "@babel/preset-react": "^7.25.9",
+    "babel-jest": "^29.7.0",
+    "jest": "^27.5.1"
   }
 }

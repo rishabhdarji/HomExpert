@@ -4,6 +4,13 @@ import { Link, useNavigate } from 'react-router-dom';
 const Cart = ({ cartItems, removeFromCart }) => {
   const navigate = useNavigate();
 
+
+   // Calculate total price including accessories
+   const totalPrice = cartItems.reduce((total, item) => {
+    return total + parseFloat(item.price);
+  }, 0);
+
+  
   const handleCheckout = () => {
     if (cartItems.length === 0) {
       alert('Your cart is empty!');
@@ -34,6 +41,7 @@ const Cart = ({ cartItems, removeFromCart }) => {
                 <div className="card-body">
                   <h5 className="card-title">{item.name}</h5>
                   <p className="card-text">{item.description}</p>
+                  <p className="card-text">Accessories: {item.accessories}</p>
                   <p className="card-text"><strong>Price:</strong> ${item.price}</p>
                   <button 
                     className="btn btn-danger"
@@ -46,6 +54,11 @@ const Cart = ({ cartItems, removeFromCart }) => {
             </div>
           ))
         )}
+      </div>
+      <div className="row mt-4">
+        <div className="col-md-12">
+          <h4>Total Price: ${totalPrice.toFixed(2)}</h4> {/* Display total price including accessories */}
+        </div>
       </div>
 
       {cartItems.length > 0 && (

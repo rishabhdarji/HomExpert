@@ -10,7 +10,7 @@ const ProductDetails = ({ addToCart }) => {
   const [accessories, setAccessories] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-
+  const [selectedAccessories, setSelectedAccessories] = useState([]);
   useEffect(() => {
     // Fetch product details
     axios.get(`http://localhost:3001/products/${id}`)
@@ -47,6 +47,17 @@ const ProductDetails = ({ addToCart }) => {
     navigate(`/write-review/${id}`, { state: { product, productId: id } });
   };
 
+  const handleSelectAccessory = (accessories) => {
+    // Add accessory to the cart and disable the button
+    setSelectedAccessories([...selectedAccessories, accessories]);
+    addToCart({
+      accessories, // Including all accessory details
+      price: (product.price / 3).toFixed(2)
+       // Accessory price is 1/3 of the product price
+    });
+    alert(`${accessories} has been added to your cart!`);
+  };
+
   return (
     <div className="product-details-container">
       {/* Product Information */}
@@ -70,9 +81,15 @@ const ProductDetails = ({ addToCart }) => {
           <div className="accessories-grid">
             {accessories.map(accessory => (
               <div className="accessory-card" key={accessory.id}>
-                <h5>{accessory.name}</h5>
+                <h5>{accessory}</h5>
                 <p>{accessory.description}</p>
-                <p>Price: ${accessory.price}</p>
+                <p>Price: ${(product.price / 3).toFixed(2)}</p>
+                <button
+                disabled={selectedAccessories.includes(accessory)}
+                onClick={() => handleSelectAccessory(accessory)}
+              >
+                {selectedAccessories.includes(accessory) ? 'Selected' : 'Select'}
+              </button>
               </div>
             ))}
           </div>

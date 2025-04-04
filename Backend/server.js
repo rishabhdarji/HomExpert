@@ -1,18 +1,20 @@
-const express = require("express");
-const mysql = require("mysql2");
-const bcrypt = require("bcryptjs");
-const mongoose = require("mongoose"); // MongoDB integration
-const bodyParser = require("body-parser");
-const cors = require("cors");
-const fs = require("fs");
-const xml2js = require("xml2js");
-const runSync = require("./generateData"); 
-const multer = require("multer");
-const axios = require("axios"); // Axios for HTTP requests
+import express from "express";
+import mysql from "mysql2";
+import bcrypt from "bcryptjs";
+import mongoose from "mongoose"; // MongoDB integration
+import bodyParser from "body-parser";
+import cors from "cors";
+import fs from "fs";
+import xml2js from "xml2js";
+// import runSync from "./generateData"; 
+import multer from "multer";
+import axios from "axios"; // Axios for HTTP requests
+// import embeddings from 'openai/resources/embeddings.mjs';
+import dotenv from "dotenv"; // Load environment variables from the .env file
+import { v4 as uuidv4 } from "uuid"; // UUID for generating unique IDs
+import path from "path";
 
-require("dotenv").config(); // Load environment variables from the .env file
-const { v4: uuidv4 } = require("uuid"); // UUID for generating unique IDs
-const path = require("path");
+dotenv.config(); // Initialize dotenv
 
 const app = express(); // Initialize the application
 
@@ -23,6 +25,7 @@ app.use(bodyParser.json());
 app.use(cors());
 
 const port = 3001;
+
 
 // Establish a connection to the MySQL database
 const db = mysql.createConnection({
@@ -83,7 +86,10 @@ db.connect(async (err) => {
 
 
 
-const { Client } = require("@elastic/elasticsearch");
+// const { Client } = require("@elastic/elasticsearch");
+import { Client } from "@elastic/elasticsearch";
+// const { Embeddings } = require("openai/resources/embeddings.mjs");
+import { Embeddings } from "openai/resources/embeddings.mjs";
 const elasticClient = new Client({ 
   node: process.env.ELASTICSEARCH_URL || 'http://localhost:9200',
   maxRetries: 5,
@@ -92,26 +98,27 @@ const elasticClient = new Client({
 });
 
 
-
-// Endpoint to register a new user
-app.post("/signup", async (req, res) => {
-  const { name, email, password, role } = req.body;
-
-  // Encrypt the password before saving it to the database
-  const hashedPassword = await bcrypt.hash(password, 10);
-
-  const query = "INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, ?)";
-
-  db.query(query, [name, email, hashedPassword, role], (err, result) => {
-    if (err) {
-      return res.status(500).json({
-        message: "Failed to register user",
-        error: err,
-      });
+// Configure Multer for file uploads
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    const uploadDir = "./uploads";
+    if (!fs.existsSync(uploadDir)) {
+      fs.mkdirSync(uploadDir); // Create the upload directory if it doesn't exist
     }
-    return res.status(200).json({ message: "User successfully registered" });
-  });
+    cb(null, uploadDir); // Set the upload destination
+  },
+  filename: (req, file, cb) => {
+    const uniqueName = `${uuidv4()}${path.extname(file.originalname)}`; // Generate a unique name for the uploaded file
+    cb(null, uniqueName);
+  },
 });
+const upload = multer({ storage }); // Initialize Multer with the configured storage
+
+// Utility function to encode an image file as a base64 string
+function encodeImage(imagePath) {
+  const image = fs.readFileSync(imagePath); // Read the image file from the given path
+  return image.toString("base64"); // Convert the image to base64 format
+}
 
 // Endpoint to log in an existing user
 app.post("/login", (req, res) => {
@@ -155,25 +162,47 @@ app.post("/login", (req, res) => {
   });
 });
 
-// Endpoint to retrieve products, with optional filtering by category
-app.get("/products", (req, res) => {
-  const category = req.query.category;
 
-  let query = "SELECT * FROM products";
-  if (category) {
-    query += " WHERE category = ?";
-  }
+// Endpoint to register a new user
+app.post("/signup", async (req, res) => {
+  const { name, email, password, role } = req.body;
 
-  db.query(query, [category], (err, results) => {
+  // Encrypt the password before saving it to the database
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  const query = "INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, ?)";
+
+  db.query(query, [name, email, hashedPassword, role], (err, result) => {
     if (err) {
       return res.status(500).json({
-        message: "Failed to retrieve products",
+        message: "Failed to register user",
         error: err,
       });
     }
+    return res.status(200).json({ message: "User successfully registered" });
+  });
+});
 
-    // console.log("Products retrieved:", results); // Uncomment for debugging
-    return res.status(200).json(results);
+
+// Endpoint to update an existing product by its ID
+app.put("/products/:id", (req, res) => {
+  const { id } = req.params;
+  const { name, price, description, category, accessories, image } = req.body;
+
+  const query = `
+    UPDATE products 
+    SET name = ?, price = ?, description = ?, category = ?, accessories = ?, image = ? 
+    WHERE id = ?`;
+
+  db.query(query, [name, price, description, category, accessories, image, id], (err, result) => {
+    if (err) {
+      console.error("Error while updating the product:", err);
+      return res.status(500).json({ message: "Failed to update the product" });
+    }
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+    res.status(200).json({ message: "Product updated successfully" });
   });
 });
 
@@ -218,44 +247,25 @@ app.post("/products", (req, res) => {
   );
 });
 
-// Endpoint to update an existing product by its ID
-app.put("/products/:id", (req, res) => {
-  const { id } = req.params;
-  const { name, price, description, category, accessories, image } = req.body;
+// Endpoint to retrieve products, with optional filtering by category
+app.get("/products", (req, res) => {
+  const category = req.query.category;
 
-  const query = `
-    UPDATE products 
-    SET name = ?, price = ?, description = ?, category = ?, accessories = ?, image = ? 
-    WHERE id = ?`;
+  let query = "SELECT * FROM products";
+  if (category) {
+    query += " WHERE category = ?";
+  }
 
-  db.query(query, [name, price, description, category, accessories, image, id], (err, result) => {
+  db.query(query, [category], (err, results) => {
     if (err) {
-      console.error("Error while updating the product:", err);
-      return res.status(500).json({ message: "Failed to update the product" });
+      return res.status(500).json({
+        message: "Failed to retrieve products",
+        error: err,
+      });
     }
-    if (result.affectedRows === 0) {
-      return res.status(404).json({ message: "Product not found" });
-    }
-    res.status(200).json({ message: "Product updated successfully" });
-  });
-});
 
-// Endpoint to delete a product by its ID
-app.delete("/products/:id", (req, res) => {
-  const { id } = req.params;
-
-  console.log("Request to delete product with ID:", id); // Log ID for debugging
-  const query = `DELETE FROM products WHERE id = ?`;
-
-  db.query(query, [id], (err, result) => {
-    if (err) {
-      console.error("Error while deleting the product:", err);
-      return res.status(500).json({ message: "Failed to delete the product" });
-    }
-    if (result.affectedRows === 0) {
-      return res.status(404).json({ message: "Product not found" });
-    }
-    res.status(200).json({ message: "Product deleted successfully" });
+    // console.log("Products retrieved:", results); // Uncomment for debugging
+    return res.status(200).json(results);
   });
 });
 
@@ -370,6 +380,50 @@ app.post("/place-order", (req, res) => {
   res.status(200).json({ message: "Order placed successfully" });
 });
 
+// Endpoint to update an existing product by its ID
+app.put("/products/:id", (req, res) => {
+  const { id } = req.params;
+  const { name, price, description, category, accessories, image } = req.body;
+
+  const query = `
+    UPDATE products 
+    SET name = ?, price = ?, description = ?, category = ?, accessories = ?, image = ? 
+    WHERE id = ?`;
+
+  db.query(query, [name, price, description, category, accessories, image, id], (err, result) => {
+    if (err) {
+      console.error("Error while updating the product:", err);
+      return res.status(500).json({ message: "Failed to update the product" });
+    }
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+    res.status(200).json({ message: "Product updated successfully" });
+  });
+});
+
+
+// Endpoint to delete a product by its ID
+app.delete("/products/:id", (req, res) => {
+  const { id } = req.params;
+
+  console.log("Request to delete product with ID:", id); // Log ID for debugging
+  const query = `DELETE FROM products WHERE id = ?`;
+
+  db.query(query, [id], (err, result) => {
+    if (err) {
+      console.error("Error while deleting the product:", err);
+      return res.status(500).json({ message: "Failed to delete the product" });
+    }
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+    res.status(200).json({ message: "Product deleted successfully" });
+  });
+});
+
+
+
 
 
 // Endpoint to retrieve past orders for a specific user
@@ -460,13 +514,14 @@ app.post("/orders", (req, res) => {
     delivery_method,
     store_location,
     delivery_date,
+    status // Add status field
   } = req.body;
 
   const query =
-    "INSERT INTO orders (user_id, total_price, delivery_method, store_location, delivery_date) VALUES (?, ?, ?, ?, ?)";
+    "INSERT INTO orders (user_id, total_price, delivery_method, store_location, delivery_date, status) VALUES (?, ?, ?, ?, ?, ?)";
   db.query(
     query,
-    [user_id, total_price, delivery_method, store_location, delivery_date],
+    [user_id, total_price, delivery_method, store_location, delivery_date, status],
     (err, result) => {
       if (err) {
         console.error("Error while adding order:", err);
@@ -475,56 +530,6 @@ app.post("/orders", (req, res) => {
       res.status(201).json({ message: "Order created successfully" });
     }
   );
-});
-
-// Endpoint to fetch all orders
-app.get("/orders", (req, res) => {
-  const query = "SELECT * FROM orders";
-  db.query(query, (err, results) => {
-    if (err) {
-      console.error("Failed to retrieve orders:", err);
-      return res.status(500).json({ message: "Could not fetch orders" });
-    }
-    res.status(200).json(results); // Send the list of orders as a JSON response
-  });
-});
-
-// Endpoint to update an existing order
-app.put("/orders/:id", (req, res) => {
-  const { id } = req.params;
-  const { total_price, delivery_method, store_location, delivery_date } =
-    req.body;
-
-  const query = `
-    UPDATE orders 
-    SET total_price = ?, delivery_method = ?, store_location = ?, delivery_date = ? 
-    WHERE id = ?`;
-
-  db.query(
-    query,
-    [total_price, delivery_method, store_location, delivery_date, id],
-    (err, result) => {
-      if (err) {
-        console.error("Error while updating order:", err);
-        return res.status(500).json({ message: "Failed to update order" });
-      }
-      res.status(200).json({ message: "Order updated successfully" });
-    }
-  );
-});
-
-// Endpoint to delete an order by ID
-app.delete("/orders/:id", (req, res) => {
-  const { id } = req.params;
-
-  const query = "DELETE FROM orders WHERE id = ?";
-  db.query(query, [id], (err, result) => {
-    if (err) {
-      console.error("Error while deleting order:", err);
-      return res.status(500).json({ message: "Failed to delete order" });
-    }
-    res.status(200).json({ message: "Order deleted successfully" });
-  });
 });
 
 // Endpoint to fetch details of a specific product by ID
@@ -545,6 +550,74 @@ app.get("/products/:id", (req, res) => {
     }
 
     res.status(200).json(result[0]); // Return the product details in the response
+  });
+});
+
+// Endpoint to fetch all orders
+app.get("/orders", (req, res) => {
+  const query = "SELECT * FROM orders";
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error("Failed to retrieve orders:", err);
+      return res.status(500).json({ message: "Could not fetch orders" });
+    }
+    res.status(200).json(results); // Send the list of orders as a JSON response
+  });
+});
+
+// Endpoint to delete an order by ID
+app.delete("/orders/:id", (req, res) => {
+  const { id } = req.params;
+
+  const query = "DELETE FROM orders WHERE id = ?";
+  db.query(query, [id], (err, result) => {
+    if (err) {
+      console.error("Error while deleting order:", err);
+      return res.status(500).json({ message: "Failed to delete order" });
+    }
+    res.status(200).json({ message: "Order deleted successfully" });
+  });
+});
+
+// Endpoint to update an existing order
+app.put("/orders/:id", (req, res) => {
+  const { id } = req.params;
+  const { total_price, delivery_method, store_location, delivery_date, status } = req.body;
+
+  const query = `
+    UPDATE orders 
+    SET total_price = ?, delivery_method = ?, store_location = ?, delivery_date = ?, status = ? 
+    WHERE id = ?`;
+
+  db.query(
+    query,
+    [total_price, delivery_method, store_location, delivery_date, status, id],
+    (err, result) => {
+      if (err) {
+        console.error("Error while updating order:", err);
+        return res.status(500).json({ message: "Failed to update order" });
+      }
+      res.status(200).json({ message: "Order updated successfully" });
+    }
+  );
+});
+
+// Endpoint to fetch all products with their stock levels
+app.get("/inventory/products", (req, res) => {
+  const query = `
+    SELECT name, price, stock 
+    FROM products
+    ORDER BY name;
+  `;
+
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error("Error while retrieving inventory data:", err);
+      return res
+        .status(500)
+        .json({ message: "Unable to fetch inventory data", error: err.message });
+    }
+    res.status(200).json(results); // Return the inventory data
   });
 });
 
@@ -578,6 +651,63 @@ app.get("/trending/top-zipcodes", async (req, res) => {
   }
 });
 
+// Endpoint to fetch total daily sales transactions
+app.get("/sales-report/daily-sales", (req, res) => {
+  const query = `
+    SELECT DATE(o.order_date) AS date, SUM(o.total_price) AS total_sales
+    FROM orders o
+    GROUP BY DATE(o.order_date)
+    ORDER BY date DESC
+  `;
+
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error("Failed to fetch daily sales data:", err);
+      return res.status(500).json({
+        message: "Unable to retrieve daily sales data",
+        error: err.message,
+      });
+    }
+    res.status(200).json(results); // Send daily sales data as JSON
+  });
+});
+
+// Endpoint to retrieve store locations
+app.get("/store-locations", (req, res) => {
+  const query = "SELECT * FROM store_locations"; // Replace with the correct table name for store locations
+
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error("Error while retrieving store locations:", err);
+      return res
+        .status(500)
+        .json({ message: "Unable to fetch store locations" });
+    }
+    res.status(200).json(results); // Return the store locations
+  });
+});
+
+// Endpoint to fetch all products with manufacturer rebates
+app.get("/inventory/products/rebates", (req, res) => {
+  const query = `
+    SELECT name, price, rebate
+    FROM products
+    WHERE rebate IS NOT NULL
+    ORDER BY name;
+  `;
+
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error("Failed to fetch products with rebates:", err);
+      return res.status(500).json({
+        message: "Unable to retrieve products with rebates",
+        error: err.message,
+      });
+    }
+    res.status(200).json(results); // Return products with rebates
+  });
+});
+
 // Endpoint to get the top five most sold products
 app.get("/trending/most-sold", async (req, res) => {
   try {
@@ -609,79 +739,6 @@ app.get("/trending/most-sold", async (req, res) => {
   }
 });
 
-// Endpoint to retrieve store locations
-app.get("/store-locations", (req, res) => {
-  const query = "SELECT * FROM store_locations"; // Replace with the correct table name for store locations
-
-  db.query(query, (err, results) => {
-    if (err) {
-      console.error("Error while retrieving store locations:", err);
-      return res
-        .status(500)
-        .json({ message: "Unable to fetch store locations" });
-    }
-    res.status(200).json(results); // Return the store locations
-  });
-});
-
-// Endpoint to fetch accessories for a specific product
-app.get("/accessories", (req, res) => {
-  const productId = req.query.productId; // Extract productId from query parameters
-
-  if (!productId) {
-    return res.status(400).json({ message: "Product ID is required" });
-  }
-
-  const query = "SELECT * FROM accessories WHERE product_id = ?";
-  db.query(query, [productId], (err, results) => {
-    if (err) {
-      console.error("Error while fetching accessories:", err);
-      return res
-        .status(500)
-        .json({ message: "Unable to fetch accessories", error: err.message });
-    }
-    res.status(200).json(results); // Return the accessories data
-  });
-});
-
-// Endpoint to fetch all products with their stock levels
-app.get("/inventory/products", (req, res) => {
-  const query = `
-    SELECT name, price, stock 
-    FROM products
-    ORDER BY name;
-  `;
-
-  db.query(query, (err, results) => {
-    if (err) {
-      console.error("Error while retrieving inventory data:", err);
-      return res
-        .status(500)
-        .json({ message: "Unable to fetch inventory data", error: err.message });
-    }
-    res.status(200).json(results); // Return the inventory data
-  });
-});
-
-// Endpoint to fetch product names and stock levels for a bar chart
-app.get("/inventory/products/bar-chart", (req, res) => {
-  const query = `
-    SELECT name, stock 
-    FROM products
-    ORDER BY name;
-  `;
-
-  db.query(query, (err, results) => {
-    if (err) {
-      console.error("Error while fetching data for bar chart:", err);
-      return res
-        .status(500)
-        .json({ message: "Unable to fetch bar chart data", error: err.message });
-    }
-    res.status(200).json(results); // Return the data for visualization
-  });
-});
-
 // Endpoint to fetch all products currently on sale (with a discount)
 app.get("/inventory/products/sale", (req, res) => {
   const query = `
@@ -703,26 +760,84 @@ app.get("/inventory/products/sale", (req, res) => {
   });
 });
 
-// Endpoint to fetch all products with manufacturer rebates
-app.get("/inventory/products/rebates", (req, res) => {
+
+// // Endpoint to fetch accessories for a specific product
+// app.get('/accessories', (req, res) => {
+//   const productId = req.query.productId;  // Get productId from query parameters
+//   if (!productId) {
+//     return res.status(400).json({ message: 'Product ID is required' });
+//   }
+
+//   const query = 'SELECT * FROM accessories WHERE product_id = ?';
+//   db.query(query, [productId], (err, results) => {
+//     if (err) {
+//       console.error('Error fetching accessories:', err);
+//       return res.status(500).json({ message: 'Error fetching accessories' });
+//     }
+//     res.status(200).json(results);
+//   });
+// });
+
+
+
+// Endpoint to fetch accessories for a specific product
+// app.get('/accessories', (req, res) => {
+//   const productId = req.query.productId;  // Get productId from query parameters
+//   if (!productId) {
+//     return res.status(400).json({ message: 'Product ID is required' });
+//   }
+
+//   const query = 'SELECT * FROM accessories WHERE product_id = ?';
+//   db.query(query, [productId], (err, results) => {
+//     if (err) {
+//       console.error('Error fetching accessories:', err);
+//       return res.status(500).json({ message: 'Error fetching accessories' });
+//     }
+//     res.status(200).json(results);
+//   });
+// });
+
+app.get('/accessories', (req, res) => {
+  const productId = req.query.productId;
+  if (!productId) {
+    return res.status(400).json({ message: 'Product ID is required' });
+  }
+
+  const query = "SELECT accessories FROM products WHERE id = ?";
+  db.query(query, [productId], (err, results) => {
+    if (err) {
+      console.error('Database error:', err);
+      return res.status(500).json({ message: 'Internal server error', error: err.message });
+    }
+    if (results.length > 0 && results[0].accessories) {
+      const accessoriesArray = results[0].accessories.split(',').map(item => item.trim());
+      res.status(200).json(accessoriesArray);
+    } else {
+      res.status(200).json([]);
+    }
+  });
+});
+
+
+// Endpoint to fetch product names and stock levels for a bar chart
+app.get("/inventory/products/bar-chart", (req, res) => {
   const query = `
-    SELECT name, price, rebate
+    SELECT name, stock 
     FROM products
-    WHERE rebate IS NOT NULL
     ORDER BY name;
   `;
 
   db.query(query, (err, results) => {
     if (err) {
-      console.error("Failed to fetch products with rebates:", err);
-      return res.status(500).json({
-        message: "Unable to retrieve products with rebates",
-        error: err.message,
-      });
+      console.error("Error while fetching data for bar chart:", err);
+      return res
+        .status(500)
+        .json({ message: "Unable to fetch bar chart data", error: err.message });
     }
-    res.status(200).json(results); // Return products with rebates
+    res.status(200).json(results); // Return the data for visualization
   });
 });
+
 
 // Endpoint to fetch product sales report (name, price, items sold, and total sales)
 app.get("/sales-report/products-sold", (req, res) => {
@@ -767,26 +882,7 @@ app.get("/sales-report/products-sales-chart", (req, res) => {
   });
 });
 
-// Endpoint to fetch total daily sales transactions
-app.get("/sales-report/daily-sales", (req, res) => {
-  const query = `
-    SELECT DATE(o.order_date) AS date, SUM(o.total_price) AS total_sales
-    FROM orders o
-    GROUP BY DATE(o.order_date)
-    ORDER BY date DESC
-  `;
 
-  db.query(query, (err, results) => {
-    if (err) {
-      console.error("Failed to fetch daily sales data:", err);
-      return res.status(500).json({
-        message: "Unable to retrieve daily sales data",
-        error: err.message,
-      });
-    }
-    res.status(200).json(results); // Send daily sales data as JSON
-  });
-});
 
 // Endpoint for search auto-completion
 app.get("/autocomplete", (req, res) => {
@@ -814,27 +910,7 @@ app.get("/autocomplete", (req, res) => {
 
 // Ticket-related functionality starts here
 
-// Configure Multer for file uploads
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    const uploadDir = "./uploads";
-    if (!fs.existsSync(uploadDir)) {
-      fs.mkdirSync(uploadDir); // Create the upload directory if it doesn't exist
-    }
-    cb(null, uploadDir); // Set the upload destination
-  },
-  filename: (req, file, cb) => {
-    const uniqueName = `${uuidv4()}${path.extname(file.originalname)}`; // Generate a unique name for the uploaded file
-    cb(null, uniqueName);
-  },
-});
-const upload = multer({ storage }); // Initialize Multer with the configured storage
 
-// Utility function to encode an image file as a base64 string
-function encodeImage(imagePath) {
-  const image = fs.readFileSync(imagePath); // Read the image file from the given path
-  return image.toString("base64"); // Convert the image to base64 format
-}
 
 // POST route for creating a new ticket
 app.post("/tickets", upload.single("image"), async (req, res) => {
@@ -875,7 +951,7 @@ app.post("/tickets", upload.single("image"), async (req, res) => {
       },
       {
         headers: {
-          Authorization: `Bearer YOUR_API_KEY`, // Replace with your OpenAI API key
+          Authorization: `Bearer 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`, // Replace with your OpenAI API key
           "Content-Type": "application/json",
         },
       }
@@ -899,7 +975,7 @@ app.post("/tickets", upload.single("image"), async (req, res) => {
       },
       {
         headers: {
-          Authorization: `Bearer YOUR_API_KEY`, // Replace with your OpenAI API key
+          Authorization: `Bearer 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`, // Replace with your OpenAI API key
           "Content-Type": "application/json",
         },
       }
@@ -995,7 +1071,7 @@ app.post("/generate-embeddings", async (req, res) => {
             },
             {
               headers: {
-                Authorization: `Bearer YOUR_API_KEY`, // Replace with your OpenAI API key
+                Authorization: `Bearer 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`, // Replace with your OpenAI API key
                 "Content-Type": "application/json",
               },
             }
@@ -1041,6 +1117,60 @@ app.post("/generate-embeddings", async (req, res) => {
 });
 
 
+// Endpoint to generate embeddings for reviews
+app.post("/generate-review-embeddings", async (req, res) => {
+  try {
+    // Retrieve all reviews that do not yet have embeddings
+    const reviewsWithoutEmbedding = await Review.find({ embedding: null });
+
+    if (reviewsWithoutEmbedding.length === 0) {
+      return res.status(200).json({
+        message: "All reviews already have embeddings.",
+      });
+    }
+
+    for (const review of reviewsWithoutEmbedding) {
+      try {
+        // Request embedding generation from OpenAI API
+        const response = await axios.post(
+          "https://api.openai.com/v1/embeddings",
+          {
+            input: review.reviewText,
+            model: "text-embedding-3-small",
+          },
+          {
+            headers: {
+              Authorization: `Bearer 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`, // Replace with your OpenAI API key
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        const embedding = response.data.data[0].embedding;
+
+        // Save the generated embedding to the review
+        review.embedding = embedding;
+        await review.save();
+      } catch (error) {
+        console.error(
+          `Error generating embedding for review ID ${review._id}:`,
+          error.message
+        );
+      }
+    }
+
+    res.status(200).json({
+      message: "Embeddings successfully generated for reviews.",
+    });
+  } catch (error) {
+    console.error("Error during review embedding generation:", error.message);
+    res.status(500).json({
+      message: "Failed to generate embeddings",
+      error: error.message,
+    });
+  }
+});
+
 
 // POST endpoint for product recommendations
 app.post("/recommend-products", async (req, res) => {
@@ -1061,7 +1191,7 @@ app.post("/recommend-products", async (req, res) => {
       },
       {
         headers: {
-          Authorization: `Bearer YOUR_API_KEY`, // Replace with your OpenAI API key
+          Authorization: `Bearer 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`, // Replace with your OpenAI API key
           "Content-Type": "application/json",
         },
       }
@@ -1236,7 +1366,7 @@ app.post("/reviews", async (req, res) => {
       },
       {
         headers: {
-          Authorization: `Bearer YOUR_API_KEY`, // Replace with your OpenAI API key
+          Authorization: `Bearer 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`, // Replace with your OpenAI API key
           "Content-Type": "application/json",
         },
       }
@@ -1352,7 +1482,7 @@ const syncReviewsToElasticSearch = async () => {
             },
             {
               headers: {
-                Authorization: `Bearer YOUR_API_KEY`, // Replace with your OpenAI API key
+                Authorization: `Bearer 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`, // Replace with your OpenAI API key
               },
             }
           );
@@ -1490,7 +1620,7 @@ app.post("/search-reviews", async (req, res) => {
       },
       {
         headers: {
-          Authorization: `Bearer YOUR_API_KEY`, // Replace with your OpenAI API key
+          Authorization: `Bearer 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`, // Replace with your OpenAI API key
         },
       }
     );
@@ -1533,7 +1663,7 @@ app.post("/search-reviews", async (req, res) => {
         headers: { "Content-Type": "application/json" },
         auth: {
           username: "elastic",
-          password: "YOUR_ELASTIC_PASSWORD", // Replace with your ElasticSearch password
+          password: "rishabh", // Replace with your ElasticSearch password
         },
       }
     );
@@ -1553,61 +1683,38 @@ app.post("/search-reviews", async (req, res) => {
 });
 
 
-
-
-// Endpoint to generate embeddings for reviews
-app.post("/generate-review-embeddings", async (req, res) => {
-  try {
-    // Retrieve all reviews that do not yet have embeddings
-    const reviewsWithoutEmbedding = await Review.find({ embedding: null });
-
-    if (reviewsWithoutEmbedding.length === 0) {
-      return res.status(200).json({
-        message: "All reviews already have embeddings.",
-      });
+// Endpoint to fetch all customer orders
+app.get("/customer-orders", (req, res) => {
+  const query = "SELECT * FROM CustomerOrder";
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error("Failed to fetch customer orders:", err);
+      return res.status(500).json({ message: "Could not fetch customer orders" });
     }
-
-    for (const review of reviewsWithoutEmbedding) {
-      try {
-        // Request embedding generation from OpenAI API
-        const response = await axios.post(
-          "https://api.openai.com/v1/embeddings",
-          {
-            input: review.reviewText,
-            model: "text-embedding-3-small",
-          },
-          {
-            headers: {
-              Authorization: `Bearer YOUR_API_KEY`, // Replace with your OpenAI API key
-              "Content-Type": "application/json",
-            },
-          }
-        );
-
-        const embedding = response.data.data[0].embedding;
-
-        // Save the generated embedding to the review
-        review.embedding = embedding;
-        await review.save();
-      } catch (error) {
-        console.error(
-          `Error generating embedding for review ID ${review._id}:`,
-          error.message
-        );
-      }
-    }
-
-    res.status(200).json({
-      message: "Embeddings successfully generated for reviews.",
-    });
-  } catch (error) {
-    console.error("Error during review embedding generation:", error.message);
-    res.status(500).json({
-      message: "Failed to generate embeddings",
-      error: error.message,
-    });
-  }
+    res.status(200).json(results); // Send the list of customer orders as JSON
+  });
 });
+
+// Endpoint to update the status of a customer order
+app.put("/customer-orders/:id", (req, res) => {
+  const { id } = req.params;
+  const { status } = req.body;
+
+  const query = "UPDATE CustomerOrder SET status = ? WHERE id = ?";
+  db.query(query, [status, id], (err, result) => {
+    if (err) {
+      console.error("Error while updating customer order status:", err);
+      return res.status(500).json({ message: "Failed to update customer order status" });
+    }
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: "Customer order not found" });
+    }
+    res.status(200).json({ message: "Customer order status updated successfully" });
+  });
+});
+
+
+
 
 // Start the server
 app.listen(port, () => {

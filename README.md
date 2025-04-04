@@ -113,7 +113,8 @@ CREATE TABLE products (
     discount DECIMAL(5, 2),
     rebate DECIMAL(5, 2),
     warranty INT,
-    stock INT
+    stock INT,
+    embedding TEXT
 );
 
 CREATE TABLE CustomerOrder (
@@ -206,3 +207,41 @@ OpenAI API Integration:
 
 Add your API key in the .env file as OPENAI_API_KEY=<your_openai_api_key>.
 Use the OpenAI API at https://platform.openai.com/ for any required AI-powered features.
+
+5. Additional Features
+Semantic Search for Reviews
+    Added an input field with a "Search Reviews" button.
+    Users can search for product reviews semantically similar to the entered query text. The search uses Elasticsearch for embedding-based vector similarity.
+
+Product Recommendation
+    Added an input field with a "Recommend Product" button.
+    Users can get product recommendations based on semantic similarity to the entered product description. This uses OpenAI embeddings and Elasticsearch for vector matching.
+
+OpenAI Integration
+    Integrated OpenAI to generate product records and reviews:
+    Product Records: Each record includes a name, category, description, and price for SmartHome products.
+    Product Reviews: Generated 5 reviews for 10 SmartHome products.
+    Used the text-embedding-ada-002 model for generating vector embeddings for:
+    Product descriptions.
+    Product reviews.
+
+Elasticsearch Configuration
+    Stored embeddings for product records and reviews in Elasticsearch to enable semantic search functionality for reviews and recommendations.
+    Followed the OpenAI and Elasticsearch integration tutorial to implement embedding-based search.
+
+Demonstration Functionality
+    Product Recommendations: Demonstrated the functionality with two sample queries showing different product recommendations.
+    Review Search: Demonstrated semantic search with two sample queries highlighting reviews similar to the input.
+
+Setup Instructions
+Elasticsearch Setup
+
+Install and set up Elasticsearch.
+Create indices for storing product and review embeddings.
+Configure Elasticsearch to accept vector embeddings (refer to the Elasticsearch documentation for vector search setup).
+Update the .env file with Elasticsearch details
+
+Embedding Generation
+Use the /generate-and-index-product-embeddings and /generate-and-index-review-embeddings endpoints in the backend to populate Elasticsearch with product and review embeddings.
+
+

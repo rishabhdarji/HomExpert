@@ -15,13 +15,17 @@ const Salesman = () => {
     total_price: '',
     delivery_method: 'homeDelivery',
     store_location: '',
-    delivery_date: ''
+    delivery_date: '',
+    status: 'pending' // Add status field
   });
   const [editOrder, setEditOrder] = useState(null);
+  const [customerOrders, setCustomerOrders] = useState([]);
+  const [orderStatus, setOrderStatus] = useState('');
 
   useEffect(() => {
     fetchCustomers();
     fetchOrders();
+    fetchCustomerOrders();
   }, []);
 
   // Fetch all customers
@@ -43,6 +47,17 @@ const Salesman = () => {
       })
       .catch(error => {
         console.error('Error fetching orders:', error);
+      });
+  };
+
+  // Fetch all customer orders
+  const fetchCustomerOrders = () => {
+    axios.get('http://localhost:3001/customer-orders')
+      .then(response => {
+        setCustomerOrders(response.data);
+      })
+      .catch(error => {
+        console.error('Error fetching customer orders:', error);
       });
   };
 
@@ -77,7 +92,8 @@ const Salesman = () => {
           total_price: '',
           delivery_method: 'homeDelivery',
           store_location: '',
-          delivery_date: ''
+          delivery_date: '',
+          status: 'pending' // Reset status field
         });
       })
       .catch(error => {
@@ -122,6 +138,19 @@ const Salesman = () => {
     } else {
       setNewOrder({ ...newOrder, [name]: value });
     }
+  };
+
+  // Handle status update for customer orders
+  const handleStatusUpdate = (orderId) => {
+    axios.put(`http://localhost:3001/customer-orders/${orderId}`, { status: orderStatus })
+      .then(response => {
+        alert('Order status updated successfully');
+        fetchCustomerOrders();
+        setOrderStatus('');
+      })
+      .catch(error => {
+        console.error('Error updating order status:', error);
+      });
   };
 
   return (
@@ -229,6 +258,17 @@ const Salesman = () => {
             required
           />
         </div>
+        <div className="mb-3">
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Order Status"
+            name="status"
+            value={newOrder.status}
+            onChange={(e) => handleInputChange(e)}
+            required
+          />
+        </div>
         <button type="submit" className="btn btn-primary">Add Order</button>
       </form>
 
@@ -308,6 +348,19 @@ const Salesman = () => {
               onChange={(e) => handleInputChange(e, true)}
               required
             />
+          </div>
+          <div className="mb-3">
+            <select
+              className="form-select"
+              name="status"
+              value={editOrder.status}
+              onChange={(e) => handleInputChange(e, true)}
+              required
+            >
+              <option value="pending">Pending</option>
+              <option value="shipped">Shipped</option>
+              <option value="cancelled">Cancelled</option>
+            </select>
           </div>
           <button type="submit" className="btn btn-warning">Update Order</button>
         </form>
