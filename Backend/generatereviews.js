@@ -83,7 +83,7 @@ const generateReviews = async () => {
           },
           {
             headers: {
-              Authorization: `Bearer api-key-here`, // Replace with your OpenAI API key
+              // Authorization: `Bearer api-key-here`, // Replace with your OpenAI API key
             },
           }
         );
